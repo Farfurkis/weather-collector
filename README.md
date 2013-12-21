@@ -7,6 +7,6 @@ Requirements
 ============
 
 * Python 3.3.x with the follow modules:
-** Flask
-** MySQL
+  * Flask 0.10 (http://flask.pocoo.org/)
+  * MySQL (http://dev.mysql.com/downloads/connector/python/)
 * MySQL as a storage
