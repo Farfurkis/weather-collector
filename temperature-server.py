@@ -1,42 +1,8 @@
 from flask import Flask, render_template, make_response
 from weather import Weather
 import time
-import threading
 from functools import wraps
 import mysql_weather_provider
-
-import dht22provider
-import weather_ua_provider
-
-def store_dht22_weather_periodically():
-    db_connection = mysql_weather_provider.connect()
-    while True:
-        temperature_and_humidity = dht22provider.provide_temperature_and_humidity()
-        if temperature_and_humidity is None:
-            print("Actual temperature obtaining error: measure result is 'None'")
-        else:
-            dht22_measured_weather = Weather(temperature_and_humidity[0], temperature_and_humidity[1])
-            mysql_weather_provider.write_weather(db_connection, 2, dht22_measured_weather)
-        time.sleep(60)
-
-def store_weather_ua_weather_periodically():
-    db_connection = mysql_weather_provider.connect()
-    while True:
-        temperature_and_humidity = weather_ua_provider.provide_temperature_and_humidity()
-        if temperature_and_humidity is None:
-            print("Actual temperature obtaining error: measure result is 'None'")
-        else:
-            weather_ua_measured_weather = Weather(temperature_and_humidity[0], temperature_and_humidity[1])
-            mysql_weather_provider.write_weather(db_connection, 3, weather_ua_measured_weather)
-        time.sleep(10)
-
-dht22thread = threading.Thread(target=store_dht22_weather_periodically)
-dht22thread.daemon = True
-dht22thread.start()
-
-weather_ua_thread = threading.Thread(target=store_weather_ua_weather_periodically)
-weather_ua_thread.daemon = True
-weather_ua_thread.start()
 
 #app = Flask(__name__)
 # Flask debugging problem fix: http://librelist.com/browser//flask/2013/9/18/problem-debugging-flask-under-python-3-3/
