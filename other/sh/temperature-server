@@ -10,11 +10,10 @@
 
 case "$1" in
 start)   echo -n "Start temperature-server"
-   /usr/local/bin/mybinary -start
+   /opt/python3.3.2/bin/python3 /opt/temperature-server/temperature-server.py
    ;;
 stop)   echo -n "Stop temperature-server"
-
-   /usr/local/bin/mybinary -stop
+   sudo killall temperature-server.py
    ;;
 restart)
    $0 stop
