@@ -1,8 +1,8 @@
 import threading
 
 # TODO: import providers dynamically
-import dht22provider
-import weather_ua_provider
+from plugins import dht22provider, weather_ua_provider
+
 
 def store_dht22_weather_periodically():
     db_connection = mysql_weather_provider.connect()
