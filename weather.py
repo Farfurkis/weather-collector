@@ -19,3 +19,11 @@ class Weather:
             sort_keys=False,
             indent=4,
             separators=(',', ': '))
+
+class Measurer:
+
+    def __init__(self, name, code, id, description):
+        self.name = name
+        self.code = code
+        self.id = id
+        self.description = description

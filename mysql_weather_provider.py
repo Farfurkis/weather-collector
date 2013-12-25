@@ -2,7 +2,7 @@ __author__ = 'Pasha'
 
 import mysql.connector
 from mysql.connector import errorcode
-from weather import Weather
+from weather import Weather, Measurer
 
 # TODO: rename this module into something like "mysql_datasource"
 
@@ -68,3 +68,12 @@ def write_weather(cnx, measurer_id, weather):
     cursor.execute(query.format(measurer_id, weather.temperature, weather.humidity))
     cnx.commit()
     cursor.close()
+
+# TODO: implement this method
+def get_measurer_by_code(measurer_code):
+    return Measurer("Sample measurer", "test_measurer_2", 2, "Sample measurer description")
+
+#     TODO: implement this method
+def get_all_measurers():
+    founded_measurers = []
+    return founded_measurers
