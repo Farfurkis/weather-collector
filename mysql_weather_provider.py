@@ -8,6 +8,7 @@ from weather import Weather, Measurer
 
 def connect():
     try:
+        # TODO: move connection credentials to the application config file
         cnx = mysql.connector.connect(user='home_weather',
                                       password='oGKCMoEf7QjHOGwqCB4L',
                                       host='192.168.0.132',
