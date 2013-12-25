@@ -4,6 +4,8 @@ import mysql.connector
 from mysql.connector import errorcode
 from weather import Weather
 
+# TODO: rename this module into something like "mysql_datasource"
+
 def connect():
     try:
         cnx = mysql.connector.connect(user='home_weather',
