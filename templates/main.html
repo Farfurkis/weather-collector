@@ -21,6 +21,6 @@
     {{ super() }}
     jQuery(document).ready(function() {
     setInterval(function(){update_weather('current_temperature', 'current_humidity', '/temperature/current');}, 60000);
-    retrieveFlotData('temperature/period/day/16-12-2013T00:10:20/22-12-2013T12:10:20/1', 'flotContainer');
+    retrieveFlotData('temperature/period/day/01-12-2013T00:10:20/31-12-2013T12:10:20/2', 'flotContainer');
     })
 {% endblock %}
