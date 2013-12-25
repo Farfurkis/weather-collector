@@ -4,6 +4,7 @@ import os
 import configparser
 import mysql_weather_provider
 import time
+import signal
 from weather import Weather
 
 def loadConfiguration(path_to_configuration_file):
@@ -55,50 +56,33 @@ def store_weather_periodically(measurer_id, measurement_provider, period):
         else:
             measured_weather = Weather(temperature_and_humidity[0], temperature_and_humidity[1])
             mysql_weather_provider.write_weather(db_connection, measurer_id, measured_weather)
-        time.sleep(period)
+        time.sleep(float(period))
 
-application_configuration = loadConfiguration('measurer-configuration.ini')
-plugins = loadPlugins(application_configuration['general']['plugins_directory'])
-i=2 # TODO: obtain real plugin "id" and use it instead of this counter
-for plugin_name in plugins:
-    plugin = plugins.get(plugin_name)
-    measurement_period = plugin.get_update_interval()
-    measurer_thread = threading.Thread(target=store_weather_periodically,
-                                   args=(i, plugin, measurement_period)
-    )
-    measurer_thread.daemon = True
-    measurer_thread.start()
-    i += 1
+def sigterm_handler(signum, frame):
+    print("Terminating...")
+    for thread in threads:
+        if thread.isAlive():
+            try:
+                thread._Thread__stop()
+            except:
+                print(str(thread.getName()) + ' could not be terminated')
+    sys.exit()
 
-# TODO: investigate why the script exits just after the initialization?
+def main():
+    application_configuration = loadConfiguration('measurer-configuration.ini')
+    plugins = loadPlugins(application_configuration['general']['plugins_directory'])
+    threads = []
+    i=2 # TODO: obtain real plugin "id" and use it instead of this counter
+    for plugin_name in plugins:
+        plugin = plugins.get(plugin_name)
+        measurement_period = plugin.get_update_interval()
+        measurer_thread = threading.Thread(target=store_weather_periodically,
+                                       args=(i, plugin, measurement_period)
+        )
+        measurer_thread.setName(plugin_name)
+        measurer_thread.start()
+        threads.append(measurer_thread)
+        i += 1
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
-#
-# def store_dht22_weather_periodically():
-#     db_connection = mysql_weather_provider.connect()
-#     while True:
-#         temperature_and_humidity = dht22provider.provide_temperature_and_humidity()
-#         if temperature_and_humidity is None:
-#             print("Actual temperature obtaining error: measure result is 'None'")
-#         else:
-#             dht22_measured_weather = Weather(temperature_and_humidity[0], temperature_and_humidity[1])
-#             mysql_weather_provider.write_weather(db_connection, 2, dht22_measured_weather)
-#         time.sleep(60)
-#
-# def store_weather_ua_weather_periodically():
-#     db_connection = mysql_weather_provider.connect()
-#     while True:
-#         temperature_and_humidity = weather_ua_provider.provide_temperature_and_humidity()
-#         if temperature_and_humidity is None:
-#             print("Actual temperature obtaining error: measure result is 'None'")
-#         else:
-#             weather_ua_measured_weather = Weather(temperature_and_humidity[0], temperature_and_humidity[1])
-#             mysql_weather_provider.write_weather(db_connection, 3, weather_ua_measured_weather)
-#         time.sleep(10)
-
-# dht22thread = threading.Thread(target=store_dht22_weather_periodically)
-# dht22thread.daemon = True
-# dht22thread.start()
-#
-# weather_ua_thread = threading.Thread(target=store_weather_ua_weather_periodically)
-# weather_ua_thread.daemon = True
-# weather_ua_thread.start()
+main()
