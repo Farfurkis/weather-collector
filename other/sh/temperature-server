@@ -1,3 +1,4 @@
+#! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          temperature-server
 # Required-Start:    $local_fs $network
@@ -8,9 +9,16 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
+PYTHON_PATH=/opt/python3.3.2/bin
+TEMPERATURE_APP_PATH=/opt/temperature-server
+#DAEMON=$PYTHON_PATH/python3 $TEMPERATURE_APP_PATH/temperature-server.py
+#NAME=temperature-server
+
 case "$1" in
 start)   echo -n "Start temperature-server"
-   /opt/python3.3.2/bin/python3 /opt/temperature-server/temperature-server.py
+#   start-stop-daemon --chdir $TEMPERATURE_APP_PATH --start --quiet \
+#       --pidfile /var/run/$NAME.pid --make-pidfile --exec $DAEMON || true
+   /opt/python3.3.2/bin/python3 /opt/temperature-server/temperature-server.py &
    ;;
 stop)   echo -n "Stop temperature-server"
    sudo killall temperature-server.py
