@@ -98,3 +98,18 @@ def get_all_measurers(cnx):
         founded_measurers.append(Measurer(name, code, id, description))
     cursor.close()
     return founded_measurers
+
+def get_current_weather(cnx, measurer_id):
+    """
+    Get latest measurement for the specified measurer.
+    Keyword arguments:
+        cnx -- connection used to get weather
+        measurer_id -- unique measurer identifier
+    """
+    cursor = cnx.cursor()
+    query = "SELECT temperature, humidity, measure_date FROM weather WHERE measurer_id={:d} ORDER BY id DESC LIMIT 1"
+    cursor.execute(query.format(measurer_id))
+    row = cursor.fetchone()
+    weather = Weather(row[0],row[1], row[2])
+    cursor.close()
+    return weather

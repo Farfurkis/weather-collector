@@ -27,14 +27,6 @@ def html_response(f):
 def json_response(f):
     return add_response_headers({'Content-Type': 'application/json;charset=utf-8'})(f)
 
-
-
-@app.route('/')
-@html_response
-def welcome():
-    current_weather = Weather(15, 75)
-    return render_template('main.html', temperature=current_weather.temperature, humidity=current_weather.humidity)
-
 def measurers_to_json(measurers):
     result = '{"measurers":['
     for item in measurers:
@@ -54,13 +46,16 @@ def all_measurers():
     mysql_weather_provider.disconnect(connection)
     return measurers_to_json(measurements)
 
-@app.route('/temperature/current')
+@app.route('/temperature/current/<measurer_id>')
 @json_response
-def current_temperature():
+def current_temperature(measurer_id):
     """
     Get last measured temperature.
+        measurer_id -- measurer identifier to get temperature for
     """
-    current_weather = Weather(15, 75)
+    connection = mysql_weather_provider.connect()
+    current_weather = mysql_weather_provider.get_current_weather(connection, measurer_id);
+    mysql_weather_provider.disconnect(connection)
     return current_weather.to_json()
 
 def weather_measurements_to_json(measurements):
@@ -105,6 +100,14 @@ def write_weather(temperature, humidity):
     mysql_weather_provider.write_weather(connection, 0, weather)
     mysql_weather_provider.disconnect(connection)
     return "Weather written!"
+
+@app.route('/')
+@html_response
+def welcome():
+    connection = mysql_weather_provider.connect()
+    current_weather = mysql_weather_provider.get_current_weather(connection, 2);
+    mysql_weather_provider.disconnect(connection)
+    return render_template('main.html', temperature=current_weather.temperature, humidity=current_weather.humidity)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

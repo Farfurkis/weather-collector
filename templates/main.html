@@ -22,8 +22,9 @@
     {{ super() }}
     jQuery(document).ready(function() {
         <!--TODO: show progress bar while loading data: http://jqueryui.com/progressbar/#indeterminate -->
-        setInterval(function(){update_weather('current_temperature', 'current_humidity', '/temperature/current');}, 60000);
+        setInterval(function(){update_weather('current_temperature', 'current_humidity', '/temperature/current/2');}, 60000);
+        <!--TODO: show last measured temperature and humudity near each measurer-->
         retrieveMeasurers();
-        retrieveFlotData('temperature/period/day/01-12-2013T00:10:20/31-12-2013T12:10:20/2', 'flotContainer');
+        retrieveFlotData('temperature/period/day/19-01-2014T00:10:20/01-02-2014T12:10:20/2', 'flotContainer');
     })
 {% endblock %}
