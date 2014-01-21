@@ -1,3 +1,29 @@
+function retrieveMeasurers() {
+    jQuery.ajax({
+        url: '/measurers',
+        success: function(data) {
+            const baseElement = jQuery("#measurers");
+            for (var i in data.measurers) {
+                var id = data.measurers[i].id
+                var code = data.measurers[i].code
+                var name = data.measurers[i].name
+                var description = data.measurers[i].description
+                var element_id = id + "_" + code
+                baseElement.append("<div id='" + element_id + "' class='measurer measurer-enabled'>"
+                    + "<div class='measurer-name'>" + name + "</div>"
+                    + "<div class='measurer-descriptionq'>" + description + "</div>"
+                    + "</div>");
+                var measurer_element = jQuery("#" + element_id);
+                measurer_element.click(
+                    function () {
+                        jQuery(this).toggleClass("measurer-enabled");
+                    }
+                );
+            }
+        }
+    });
+}
+
 function update_weather(temperature_element_id, humidity_element_id, source) {
     jQuery.ajax({
         url: source,

@@ -29,3 +29,31 @@
 .control-selected {
     background-color: cornflowerblue;
 }
+
+.measurer-name {
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+}
+
+.measurer-description {
+    width: 100%;
+}
+
+.measurers-list {
+    width: auto;
+    min-width: 100px;
+    max-width: 200px;
+    border: 1px solid yellowgreen;
+}
+
+.measurer {
+    border-radius: 10px;
+    border: 1px solid crimson;
+    padding: 1px;
+    margin: 2px;
+}
+
+.measurer-enabled {
+    background-color: darkgoldenrod;
+}

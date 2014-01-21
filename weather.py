@@ -27,3 +27,15 @@ class Measurer:
         self.code = code
         self.id = id
         self.description = description
+
+    def to_json(self):
+        return json.dumps(
+            {
+                'id': str(self.id),
+                'name': self.name,
+                'code': self.code,
+                'description': self.description
+            },
+            sort_keys=False,
+            indent=4,
+            separators=(',', ': '))

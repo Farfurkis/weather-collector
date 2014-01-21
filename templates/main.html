@@ -9,7 +9,8 @@
         <span class="temperature" id="current_temperature">{{ temperature }}</span> &deg;C,
         humidity: <span class="humidity" id="current_humidity">{{ humidity }}</span>%
     </h1>
-    <div id="flotContainer" style="width:1200px; height:600px;"></div>
+    <div id="flotContainer" style="width:800px; height:400px;display: inline-block;"></div>
+    <div id="measurers" class="measurers-list"></div>
     <div id="flotControls">
         <div class="control" id="last_24h">Last 24h</div>
         <div class="control" id="last_week">Last week</div>
@@ -20,7 +21,9 @@
 {% block javascript_include %}
     {{ super() }}
     jQuery(document).ready(function() {
-    setInterval(function(){update_weather('current_temperature', 'current_humidity', '/temperature/current');}, 60000);
-    retrieveFlotData('temperature/period/day/01-12-2013T00:10:20/31-12-2013T12:10:20/2', 'flotContainer');
+        <!--TODO: show progress bar while loading data: http://jqueryui.com/progressbar/#indeterminate -->
+        setInterval(function(){update_weather('current_temperature', 'current_humidity', '/temperature/current');}, 60000);
+        retrieveMeasurers();
+        retrieveFlotData('temperature/period/day/01-12-2013T00:10:20/31-12-2013T12:10:20/2', 'flotContainer');
     })
 {% endblock %}

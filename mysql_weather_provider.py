@@ -70,11 +70,31 @@ def write_weather(cnx, measurer_id, weather):
     cnx.commit()
     cursor.close()
 
-# TODO: implement this method
-def get_measurer_by_code(measurer_code):
-    return Measurer("Sample measurer", "test_measurer_2", 2, "Sample measurer description")
+def get_measurer_by_code(cnx, measurer_code):
+    """
+    Get measurer details by it's unique code.
+    Keyword arguments:
+        cnx -- connection used to write measurement
+        measurer_code -- unique measurer code
+    """
+    cursor = cnx.cursor()
+    query = "SELECT id, code, name, description FROM measurers ORDER BY name ASC"
+    cursor.fetchone(query)
+    measurer = Measurer(cursor.name, cursor.code, cursor.id, cursor.description)
+    cursor.close()
+    return measurer
 
-#     TODO: implement this method
-def get_all_measurers():
+def get_all_measurers(cnx):
+    """
+    Get all available temperature measurers.
+    Keyword arguments:
+        cnx -- connection used to write measurement
+    """
+    cursor = cnx.cursor()
+    query = "SELECT id, code, name, description FROM measurers ORDER BY name ASC"
+    cursor.execute(query)
     founded_measurers = []
+    for (id, code, name, description) in cursor:
+        founded_measurers.append(Measurer(name, code, id, description))
+    cursor.close()
     return founded_measurers

@@ -35,6 +35,24 @@ def welcome():
     current_weather = Weather(15, 75)
     return render_template('main.html', temperature=current_weather.temperature, humidity=current_weather.humidity)
 
+def measurers_to_json(measurers):
+    result = '{"measurers":['
+    for item in measurers:
+        result += (item.to_json() + ',')
+    result = result[:-1]
+    result += ']}'
+    return result
+
+@app.route('/measurers')
+@json_response
+def all_measurers():
+    """
+    Get measurers list.
+    """
+    connection = mysql_weather_provider.connect()
+    measurements = mysql_weather_provider.get_all_measurers(connection)
+    mysql_weather_provider.disconnect(connection)
+    return measurers_to_json(measurements)
 
 @app.route('/temperature/current')
 @json_response
