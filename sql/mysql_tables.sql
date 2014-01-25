@@ -3,11 +3,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `measurers` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL COMMENT 'Measurer unique code',
   `name` varchar(100) NOT NULL COMMENT 'Weather measurer name',
   `description` text COMMENT 'Weather measurer description',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `weather` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -18,8 +19,8 @@ CREATE TABLE IF NOT EXISTS `weather` (
   PRIMARY KEY (`id`),
   KEY `measure_date` (`measure_date`),
   KEY `measurer_id` (`measurer_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=845 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 ALTER TABLE `weather`
-  ADD CONSTRAINT `weather_ibfk_1` FOREIGN KEY (`measurer_id`) REFERENCES `measurers` (`id`) ON UPDATE CASCADE;
+ADD CONSTRAINT `weather_ibfk_1` FOREIGN KEY (`measurer_id`) REFERENCES `measurers` (`id`) ON UPDATE CASCADE;
