@@ -11,8 +11,20 @@ function retrieveMeasurers() {
                 var element_id = id + "_" + code
                 baseElement.append("<div id='" + element_id + "' class='measurer measurer-enabled'>"
                     + "<div class='measurer-name'>" + name + "</div>"
-                    + "<div class='measurer-descriptionq'>" + description + "</div>"
+                    + "<div class='measurer-description'>" + description + "</div>"
+                    + "<div class='current-temperature'><span id='" + element_id + "_current_temperature'></span>&nbsp;&deg;C</div>"
+                    + "<div class='current-humidity'><span id='" + element_id + "_current_humidity'></span>&nbsp;%</div>"
                     + "</div>");
+                update_weather(element_id + '_current_temperature',
+                               element_id + '_current_humidity',
+                               '/temperature/current/' + id);
+                setInterval(
+                    function() {
+                        update_weather(element_id + '_current_temperature',
+                                       element_id + '_current_humidity',
+                                       '/temperature/current/' + id);
+                    },
+                    60000);
                 var measurer_element = jQuery("#" + element_id);
                 measurer_element.click(
                     function () {

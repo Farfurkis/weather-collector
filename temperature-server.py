@@ -54,7 +54,7 @@ def current_temperature(measurer_id):
         measurer_id -- measurer identifier to get temperature for
     """
     connection = mysql_weather_provider.connect()
-    current_weather = mysql_weather_provider.get_current_weather(connection, measurer_id);
+    current_weather = mysql_weather_provider.get_current_weather(connection, int(measurer_id));
     mysql_weather_provider.disconnect(connection)
     return current_weather.to_json()
 

@@ -5,11 +5,9 @@
     <script src="http://yandex.st/jquery/flot/0.7/jquery.flot.js" type="text/javascript"></script>
 {% endblock %}
 {% block content %}
-    <h1>Current temperature:
-        <span class="temperature" id="current_temperature">{{ temperature }}</span> &deg;C,
-        humidity: <span class="humidity" id="current_humidity">{{ humidity }}</span>%
-    </h1>
-    <div id="flotContainer" style="width:800px; height:400px;display: inline-block;"></div>
+    <div style="display: inline;">
+        <div id="flotContainer" style="width:800px; height:400px;display: inline-block;"></div>
+    </div>
     <div id="measurers" class="measurers-list"></div>
     <div id="flotControls">
         <div class="control" id="last_24h">Last 24h</div>
@@ -21,9 +19,6 @@
 {% block javascript_include %}
     {{ super() }}
     jQuery(document).ready(function() {
-        <!--TODO: show progress bar while loading data: http://jqueryui.com/progressbar/#indeterminate -->
-        setInterval(function(){update_weather('current_temperature', 'current_humidity', '/temperature/current/2');}, 60000);
-        <!--TODO: show last measured temperature and humudity near each measurer-->
         retrieveMeasurers();
         retrieveFlotData('temperature/period/day/19-01-2014T00:10:20/01-02-2014T12:10:20/2', 'flotContainer');
     })

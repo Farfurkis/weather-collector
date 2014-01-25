@@ -45,6 +45,8 @@
     min-width: 100px;
     max-width: 200px;
     border: 1px solid yellowgreen;
+    display: inline-block;
+    vertical-align:top;
 }
 
 .measurer {
@@ -56,4 +58,14 @@
 
 .measurer-enabled {
     background-color: darkgoldenrod;
+}
+
+.current-temperature {
+    font-size: larger;
+    padding-left: 12px;
+}
+
+.current-humidity {
+    font-size: larger;
+    padding-left: 12px;
 }
