@@ -78,9 +78,12 @@ def get_measurer_by_code(cnx, measurer_code):
         measurer_code -- unique measurer code
     """
     cursor = cnx.cursor()
-    query = "SELECT id, code, name, description FROM measurers ORDER BY name ASC"
-    cursor.fetchone(query)
-    measurer = Measurer(cursor.name, cursor.code, cursor.id, cursor.description)
+    # TODO: fix sql-injection here and in all other places!!!
+    query = "SELECT id, code, name, description FROM measurers WHERE code='{:s}'"
+    cursor.execute(query.format(measurer_code))
+    row = cursor.fetchone()
+    # TODO: check that row is not None, throw error otherwise (HTTP response with appropriate code)
+    measurer = Measurer(row[2], row[1], row[0], row[3])
     cursor.close()
     return measurer
 

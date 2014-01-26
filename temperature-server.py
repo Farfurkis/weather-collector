@@ -42,9 +42,20 @@ def all_measurers():
     Get measurers list.
     """
     connection = mysql_weather_provider.connect()
-    measurements = mysql_weather_provider.get_all_measurers(connection)
+    measurers = mysql_weather_provider.get_all_measurers(connection)
     mysql_weather_provider.disconnect(connection)
-    return measurers_to_json(measurements)
+    return measurers_to_json(measurers)
+
+@app.route('/measurerbycode/<code>')
+@json_response
+def measurer_by_code(code):
+    """
+    Get measurer details by it's code.
+    """
+    connection = mysql_weather_provider.connect()
+    measurer = mysql_weather_provider.get_measurer_by_code(connection, code)
+    mysql_weather_provider.disconnect(connection)
+    return measurer.to_json()
 
 @app.route('/temperature/current/<measurer_id>')
 @json_response
