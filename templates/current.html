@@ -1,0 +1,14 @@
+{% extends "basic.html" %}
+{% block title %}Main page{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<div id="measurers" class="measurers-list"></div>
+{% endblock %}
+{% block javascript_include %}
+{{ super() }}
+jQuery(document).ready(function() {
+    retrieveMeasurers();
+})
+{% endblock %}

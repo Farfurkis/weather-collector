@@ -101,13 +101,16 @@ def write_weather(temperature, humidity):
     mysql_weather_provider.disconnect(connection)
     return "Weather written!"
 
-@app.route('/')
+@app.route('/html/current')
 @html_response
-def welcome():
-    connection = mysql_weather_provider.connect()
-    current_weather = mysql_weather_provider.get_current_weather(connection, 2);
-    mysql_weather_provider.disconnect(connection)
-    return render_template('main.html', temperature=current_weather.temperature, humidity=current_weather.humidity)
+def current_weather_page():
+    return render_template('current.html')
+
+@app.route('/')
+@app.route('/html/main')
+@html_response
+def main_page():
+    return render_template('main.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
