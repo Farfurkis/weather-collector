@@ -2,6 +2,7 @@ __author__ = 'Pasha'
 
 import mysql.connector
 from mysql.connector import errorcode
+from mysql.connector import conversion
 from weather import Weather, Measurer
 
 # TODO: rename this module into something like "mysql_datasource"
@@ -78,9 +79,8 @@ def get_measurer_by_code(cnx, measurer_code):
         measurer_code -- unique measurer code
     """
     cursor = cnx.cursor()
-    # TODO: fix sql-injection here and in all other places!!!
     query = "SELECT id, code, name, description FROM measurers WHERE code='{:s}'"
-    cursor.execute(query.format(measurer_code))
+    cursor.execute(query.format(conversion.MySQLConverter().escape(measurer_code)))
     row = cursor.fetchone()
     # TODO: check that row is not None, throw error otherwise (HTTP response with appropriate code)
     measurer = Measurer(row[2], row[1], row[0], row[3])
