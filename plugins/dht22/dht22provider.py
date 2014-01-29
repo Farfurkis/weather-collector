@@ -18,8 +18,6 @@ def init(common_settings, specific_settings):
     dht_measurer_update_interval = common_settings['period']
     global dht_plugin_code
     dht_plugin_code = common_settings['id']
-    global dht_plugin_code
-    dht_plugin_code = common_settings['id']
     global dht_plugin_name
     dht_plugin_name = common_settings['name']
     global dht_plugin_description
