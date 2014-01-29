@@ -6,6 +6,7 @@ from mysql.connector import conversion
 from weather import Weather, Measurer
 
 # TODO: rename this module into something like "mysql_datasource"
+# TODO: let this module manage db connections itself
 
 def connect():
     try:
@@ -101,6 +102,21 @@ def get_all_measurers(cnx):
         founded_measurers.append(Measurer(name, code, id, description))
     cursor.close()
     return founded_measurers
+
+def add_measurer(cnx, measurer):
+    """
+    Add new measurer to database.
+    Keyword arguments:
+        cnx -- connection used to write measurement
+        measurer -- Measurer to store
+    """
+    cursor = cnx.cursor()
+    query = "INSERT INTO measurers (code, name, description) VALUES (%s, %s, %s)"
+    cursor.execute(query, (measurer.code, measurer.name, measurer.description))
+    measurer.id = cursor.lastrowid
+    cnx.commit()
+    cursor.close()
+    return measurer
 
 def get_current_weather(cnx, measurer_id):
     """
