@@ -14,7 +14,7 @@ Requirements
 Plugins requirements
 ====================
 
-dht_22
+dht22
 ------
 
 * DHT11 or DHT22 sensor connected to your Raspberry Pi
