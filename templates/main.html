@@ -3,6 +3,7 @@
 {% block head %}
     {{ super() }}
     <script src="http://yandex.st/jquery/flot/0.7/jquery.flot.js" type="text/javascript"></script>
+    <script src="/static/js/lib/moment.js" type="text/javascript"></script>
 {% endblock %}
 {% block content %}
     <div style="display: inline;">
@@ -20,6 +21,13 @@
     {{ super() }}
     jQuery(document).ready(function() {
         retrieveMeasurers();
-        retrieveFlotData('temperature/period/day/01-02-2014T00:10:20/28-02-2014T12:10:20/2', 'flotContainer');
+        var date_format = 'DD-MM-YYYYTHH:mm:SS';
+        retrieveFlotData(
+            'temperature/period/day/'
+                + moment().subtract('days', 7).format(date_format)
+                + '/'
+                + moment().format(date_format)
+                + '/2',
+            'flotContainer');
     })
 {% endblock %}
