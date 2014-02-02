@@ -49,13 +49,15 @@ def store_weather_periodically(measurer_id, measurement_provider, period):
     # TODO: rework "db_connection" into some abstract data storage
     db_connection = mysql_weather_provider.connect()
     while True:
+        sleep_period = float(period)
         temperature_and_humidity = measurement_provider.provide_temperature_and_humidity()
         if temperature_and_humidity is None:
-            print("Actual temperature obtaining error: measure result is 'None'")
+            print("Actual temperature obtaining error: measure result is 'None', will retry in 10 sec...")
+            sleep_period = 10
         else:
             measured_weather = Weather(temperature_and_humidity[0], temperature_and_humidity[1])
             mysql_weather_provider.write_weather(db_connection, measurer_id, measured_weather)
-        time.sleep(float(period))
+        time.sleep(sleep_period)
 
 def sigterm_handler(signum, frame):
     print("Terminating...")
