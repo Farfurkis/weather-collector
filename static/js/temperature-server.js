@@ -14,14 +14,17 @@ function retrieveMeasurers() {
                     + "<div class='measurer-description'>" + description + "</div>"
                     + "<div class='current-temperature'><span id='" + element_id + "_current_temperature'></span>&nbsp;&deg;C</div>"
                     + "<div class='current-humidity'><span id='" + element_id + "_current_humidity'></span>&nbsp;%</div>"
+                    + "<div class='measurement-time'><span id='" + element_id + "_measurement_time'></span></div>"
                     + "</div>");
                 update_weather(element_id + '_current_temperature',
                                element_id + '_current_humidity',
+                               element_id + '_measurement_time',
                                '/temperature/current/' + id);
                 setInterval(
                     function() {
                         update_weather(element_id + '_current_temperature',
                                        element_id + '_current_humidity',
+                                       element_id + '_measurement_time',
                                        '/temperature/current/' + id);
                     },
                     60000);
@@ -36,12 +39,13 @@ function retrieveMeasurers() {
     });
 }
 
-function update_weather(temperature_element_id, humidity_element_id, source) {
+function update_weather(temperature_element_id, humidity_element_id, measurement_time_element_id, source) {
     jQuery.ajax({
         url: source,
         success: function(data) {
-            jQuery("#" + humidity_element_id).html(data["humidity"])
-            jQuery("#" + temperature_element_id).html(data["temperature"])
+            jQuery("#" + humidity_element_id).html(data["humidity"]);
+            jQuery("#" + temperature_element_id).html(data["temperature"]);
+            jQuery("#" + measurement_time_element_id).html(data["datetime"]);
         }
     });
     //setTimeout(update_weather_periodically(temperature_element_id, humidity_element_id, update_period, source), update_period);

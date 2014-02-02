@@ -69,3 +69,8 @@
     font-size: larger;
     padding-left: 12px;
 }
+
+.measurement-time {
+    font-size: smaller;
+    padding-left: 12px;
+}
