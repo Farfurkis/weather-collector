@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector import errorcode
 from mysql.connector import conversion
 from weather import Weather, Measurer
+import logging
 
 # TODO: rename this module into something like "mysql_datasource"
 # TODO: let this module manage db connections itself
@@ -18,9 +19,9 @@ def connect():
         return cnx
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with database user name or password")
+            logging.error("Database communication error: access denied.");
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exists")
+            logging.error("Database communication error: database not exists.");
         else:
             print(err)
     else:
