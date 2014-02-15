@@ -7,30 +7,31 @@ from weather import Weather, Measurer
 import logging
 
 # TODO: rename this module into something like "mysql_datasource"
-# TODO: let this module manage db connections itself
 
-def connect():
+cnx = None
+
+def init(host, username, database, password):
+    global cnx
+    cnx = __connect__(host, username, database, password)
+
+def __connect__(host, username, database, password):
     try:
-        # TODO: move connection credentials to the application config file
-        cnx = mysql.connector.connect(user='home_weather',
-                                      password='oGKCMoEf7QjHOGwqCB4L',
-                                      host='192.168.0.132',
-                                      database='home_weather')
-        return cnx
+        connection = mysql.connector.connect(username,password,host,database)
+        return connection
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            logging.error("Database communication error: access denied.");
+            logging.error("Database communication error: access denied.")
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            logging.error("Database communication error: database not exists.");
+            logging.error("Database communication error: database not exists.")
         else:
-            print(err)
+            logging.error("Database communication error: unknown error #" + err.errno)
     else:
-        cnx.close()
+        connection.close()
 
-def disconnect(connection):
-    connection.close()
+def disconnect():
+    cnx.close()
 
-def get_weather_for_period(cnx, date_start, date_end, measurer_id):
+def get_weather_for_period(date_start, date_end, measurer_id):
     """
     Get all measurements in a specific period
         get_weather_for_period(cnx, date_start, date_end) -> list of Weather
@@ -56,7 +57,7 @@ def get_weather_for_period(cnx, date_start, date_end, measurer_id):
 
     return founded_measurements
 
-def write_weather(cnx, measurer_id, weather):
+def write_weather(measurer_id, weather):
     """
     Write weather measurement to database.
     Keyword arguments:
@@ -73,7 +74,7 @@ def write_weather(cnx, measurer_id, weather):
     cnx.commit()
     cursor.close()
 
-def get_measurer_by_code(cnx, measurer_code):
+def get_measurer_by_code(measurer_code):
     """
     Get measurer details by it's unique code.
     Keyword arguments:
@@ -89,7 +90,7 @@ def get_measurer_by_code(cnx, measurer_code):
     cursor.close()
     return measurer
 
-def get_all_measurers(cnx):
+def get_all_measurers():
     """
     Get all available temperature measurers.
     Keyword arguments:
@@ -104,7 +105,7 @@ def get_all_measurers(cnx):
     cursor.close()
     return founded_measurers
 
-def add_measurer(cnx, measurer):
+def add_measurer(measurer):
     """
     Add new measurer to database.
     Keyword arguments:
@@ -119,7 +120,7 @@ def add_measurer(cnx, measurer):
     cursor.close()
     return measurer
 
-def get_current_weather(cnx, measurer_id):
+def get_current_weather(measurer_id):
     """
     Get latest measurement for the specified measurer.
     Keyword arguments:

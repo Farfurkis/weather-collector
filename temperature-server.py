@@ -41,9 +41,7 @@ def all_measurers():
     """
     Get measurers list.
     """
-    connection = mysql_weather_provider.connect()
-    measurers = mysql_weather_provider.get_all_measurers(connection)
-    mysql_weather_provider.disconnect(connection)
+    measurers = mysql_weather_provider.get_all_measurers()
     return measurers_to_json(measurers)
 
 @app.route('/measurerbycode/<code>')
@@ -52,9 +50,7 @@ def measurer_by_code(code):
     """
     Get measurer details by it's code.
     """
-    connection = mysql_weather_provider.connect()
-    measurer = mysql_weather_provider.get_measurer_by_code(connection, code)
-    mysql_weather_provider.disconnect(connection)
+    measurer = mysql_weather_provider.get_measurer_by_code(code)
     return measurer.to_json()
 
 @app.route('/temperature/current/<measurer_id>')
@@ -64,9 +60,7 @@ def current_temperature(measurer_id):
     Get last measured temperature.
         measurer_id -- measurer identifier to get temperature for
     """
-    connection = mysql_weather_provider.connect()
-    current_weather = mysql_weather_provider.get_current_weather(connection, int(measurer_id));
-    mysql_weather_provider.disconnect(connection)
+    current_weather = mysql_weather_provider.get_current_weather(int(measurer_id));
     return current_weather.to_json()
 
 def weather_measurements_to_json(measurements):
@@ -95,9 +89,7 @@ def period_temperature(details_level, date_time_from, date_time_to, measurer_id)
     pattern = '%d-%m-%YT%H:%M:%S'
     date_from = time.strptime(date_time_from, pattern)
     date_to = time.strptime(date_time_to, pattern)
-    connection = mysql_weather_provider.connect()
-    measurements = mysql_weather_provider.get_weather_for_period(connection, date_from, date_to, measurer_id)
-    mysql_weather_provider.disconnect(connection)
+    measurements = mysql_weather_provider.get_weather_for_period(date_from, date_to, measurer_id)
     return weather_measurements_to_json(measurements)
 
 @app.route('/write_weather/<temperature>/<humidity>')
@@ -105,11 +97,9 @@ def write_weather(temperature, humidity):
     """
     Store test measurement to database.
     """
-    connection = mysql_weather_provider.connect()
     weather = Weather(float(temperature), float(humidity))
     # 0 - Test measurer
-    mysql_weather_provider.write_weather(connection, 0, weather)
-    mysql_weather_provider.disconnect(connection)
+    mysql_weather_provider.write_weather(0, weather)
     return "Weather written!"
 
 @app.route('/html/current')

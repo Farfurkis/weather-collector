@@ -43,8 +43,6 @@ def loadPlugins(plugins_directory):
     return res
 
 def store_weather_periodically(measurer_id, measurement_provider, period):
-    # TODO: rework "db_connection" into some abstract data storage
-    db_connection = mysql_weather_provider.connect()
     while True:
         sleep_period = float(period)
         temperature_and_humidity = measurement_provider.provide_temperature_and_humidity()
@@ -56,7 +54,7 @@ def store_weather_periodically(measurer_id, measurement_provider, period):
             logging.info("Measurement results from '" + measurement_provider.code()
                          + "' measurer: t=" + str(measured_weather.temperature)
                          + ", h=" + str(measured_weather.humidity))
-            mysql_weather_provider.write_weather(db_connection, measurer_id, measured_weather)
+            mysql_weather_provider.write_weather(measurer_id, measured_weather)
         time.sleep(sleep_period)
 
 def sigterm_handler(signum, frame):
@@ -89,12 +87,16 @@ def init_logging(filename, log_level):
 
 def main():
     application_configuration = loadConfiguration('measurer-configuration.ini')
-    init_logging(application_configuration['general']['log_file'],application_configuration['general']['log_level']);
-    connection = mysql_weather_provider.connect()
+    init_logging(application_configuration['general']['log_file'],application_configuration['general']['log_level'])
+    mysql_configuration = application_configuration['mysql_database']
+    mysql_weather_provider.init(mysql_configuration['host'],
+                                mysql_configuration['username'],
+                                mysql_configuration['database'],
+                                mysql_configuration['password'])
     plugins = loadPlugins(application_configuration['general']['plugins_directory'])
     threads = []
 
-    measurers = mysql_weather_provider.get_all_measurers(connection)
+    measurers = mysql_weather_provider.get_all_measurers()
 
     for plugin_name in plugins:
         plugin = plugins.get(plugin_name)
@@ -109,7 +111,8 @@ def main():
                 break
 
         if measurer_id is None:
-            new_measurer = mysql_weather_provider.add_measurer(connection, Measurer(measurer_name, measurer_code, None, measurer_description))
+            new_measurer = mysql_weather_provider.add_measurer(
+                Measurer(measurer_name, measurer_code, None, measurer_description))
             measurer_id = new_measurer.id
 
         measurer_thread = threading.Thread(target=store_weather_periodically,
